@@ -30,7 +30,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'InPhoMeeT',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'keep',
@@ -60,11 +59,13 @@ class Home extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.done) {
           return MaterialApp(
             initialRoute: MyPath.splashPath,
+            title: 'KrInfinite Tasks',
+            debugShowCheckedModeBanner: false,
             routes: {
-              MyPath.todoPath: (context) => Todo(userid: 'No'),
-              MyPath.signupPath: (context) => Signup(),
-              MyPath.loginPath: (context) => Login(),
-              MyPath.splashPath: (context) => MySplash(),
+              MyPath.todoPath: (context) => Material(child: Todo(userid: 'No')),
+              MyPath.signupPath: (context) => Material(child: Signup()),
+              MyPath.loginPath: (context) => Material(child: Login()),
+              MyPath.splashPath: (context) => Material(child: MySplash()),
             },
           );
         }
@@ -81,8 +82,8 @@ class Loading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
+    return Material(
+      child: Center(
         child: CircularProgressIndicator(),
       ),
     );
@@ -94,8 +95,8 @@ class SomethingWentWrong extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Error')),
+    return const Material(
+      child: Center(child: Text('Error')),
     );
   }
 }

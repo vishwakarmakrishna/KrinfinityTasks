@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^8.0.8
   flutter_svg: ^0.22.0
   velocity_x: ^3.3.0
+  vrouter: ^1.2.0+13
 
 dev_dependencies:
   flutter_test:

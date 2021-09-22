@@ -7,7 +7,9 @@ import 'package:app/todo.dart';
 // import 'package:app/xdi_phone12_pro_max1.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class MySplash extends StatefulWidget {
   @override
@@ -43,17 +45,15 @@ class _MySplashState extends State<MySplash> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Icon(
-              Icons.ac_unit,
-              size: 100,
-            ),
-          ),
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    final String applogo = 'assets/svg/brandnewtsvg.svg';
+    final Widget appLogoSvg = SvgPicture.asset(applogo,
+        fit: BoxFit.cover, width: width, semanticsLabel: 'Acme Logo');
+    return Material(
+      child: ZStack(
+        [
+          appLogoSvg.centered(),
         ],
       ),
     );

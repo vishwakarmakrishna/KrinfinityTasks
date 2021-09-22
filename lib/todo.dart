@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:velocity_x/velocity_x.dart';
 
 class Todo extends StatefulWidget {
   final String userid;
@@ -68,9 +69,11 @@ class _TodoState extends State<Todo> {
       appBar: AppBar(
         leading: ElevatedButton(
           onPressed: logout,
-          child: Icon(Icons.ac_unit),
-        ),
-        title: Text("mytodos"),
+          style: ButtonStyle(),
+          child: Icon(Icons.logout_outlined),
+        ).box.roundedFull.makeCentered(),
+        elevation: 0.0,
+        title: Center(child: Text("KrInfinity Tasks")),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

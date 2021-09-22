@@ -41,36 +41,38 @@ class _LoginState extends State<Login> {
 // Height (without status and toolbar)
     double height3 = height - padding.top - kToolbarHeight;
     final String applogo = 'assets/svg/brandnewtsvg.svg';
-    final Widget appLogoSvg = SvgPicture.asset(applogo,
-        width: width * 0.08, semanticsLabel: 'Acme Logo');
+    final Widget appLogoSvg =
+        SvgPicture.asset(applogo, width: width, semanticsLabel: 'Acme Logo');
 
     return Material(
-      color: Colors.white,
-      child: Column(
-        children: [
-          SingleChildScrollView(
-            child: SafeArea(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    CupertinoFormSection.insetGrouped(
-                      margin: EdgeInsets.all(12),
-                      header: Row(
+      color: Colors.blueAccent,
+      child: Form(
+        key: _formKey,
+        child: ZStack(
+          [
+            VStack(
+              [
+                CupertinoFormSection.insetGrouped(
+                  margin: EdgeInsets.all(12),
+                  header: ZStack(
+                    [
+                      Row(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(6.0),
-                            margin: const EdgeInsets.all(6.0),
-                            child: appLogoSvg,
-                          ),
                           'Login'
                               .text
+                              .extraBold
+                              .color(Colors.blueAccent)
                               .size(width * 0.06)
                               .letterSpacing(1)
                               .makeCentered(),
                         ],
                       ),
-                      footer: Column(
+                    ],
+                    alignment: AlignmentDirectional.center,
+                  ),
+                  footer: ZStack(
+                    [
+                      Column(
                         children: [
                           Material(
                             color: Colors.blueAccent,
@@ -162,48 +164,48 @@ class _LoginState extends State<Login> {
                           )
                         ],
                       ),
-                      children: [
-                        CupertinoFormRow(
-                          prefix: Text('Email'),
-                          child: CupertinoTextFormFieldRow(
-                            controller: _emailController,
-                            textInputAction: TextInputAction.next,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            placeholder: 'Enter Email',
-                            validator: (email) =>
-                                email != null && !EmailValidator.validate(email)
-                                    ? 'Email cannot be Empty'
-                                    : null,
-                          ),
-                        ),
-                        CupertinoFormRow(
-                          prefix: Text('Password'),
-                          child: CupertinoTextFormFieldRow(
-                            controller: _passwordController,
-                            obscureText: true,
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            placeholder: 'Enter password',
-                            validator: (password) {
-                              if (password == null || password.isEmpty) {
-                                return 'Password cannot be empty';
-                              } else if (password.length < 6) {
-                                return 'Must be atleast 6 characters long';
-                              } else {
-                                return null;
-                              }
-                            },
-                          ),
-                        ),
-                      ],
+                    ],
+                    alignment: AlignmentDirectional.center,
+                  ),
+                  children: [
+                    CupertinoFormRow(
+                      prefix: Text('Email'),
+                      child: CupertinoTextFormFieldRow(
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        placeholder: 'Enter Email',
+                        validator: (email) =>
+                            email != null && !EmailValidator.validate(email)
+                                ? 'Email cannot be Empty'
+                                : null,
+                      ),
+                    ),
+                    CupertinoFormRow(
+                      prefix: Text('Password'),
+                      child: CupertinoTextFormFieldRow(
+                        controller: _passwordController,
+                        obscureText: true,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        placeholder: 'Enter password',
+                        validator: (password) {
+                          if (password == null || password.isEmpty) {
+                            return 'Password cannot be empty';
+                          } else if (password.length < 6) {
+                            return 'Must be atleast 6 characters long';
+                          } else {
+                            return null;
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
+          ],
+          // alignment: AlignmentDirectional.center,
+        ).objectCenter(),
       ),
     );
   }
