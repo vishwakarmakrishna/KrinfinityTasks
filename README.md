@@ -2,7 +2,7 @@
 
 KrinfinityTasks is Todo Flutter Application 
 
-##About
+## About
 
 KrinfinityTasks is Simple Todo App with firesbase backend (login with email +firestore for task stores)
 
