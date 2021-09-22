@@ -1,6 +1,6 @@
-# app
+# KrinfinityTasks
 
-A new Flutter project.
+KrinfinityTasks is Todo Flutter Application 
 
 ## Getting Started
 
