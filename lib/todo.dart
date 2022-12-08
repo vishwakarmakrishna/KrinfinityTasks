@@ -7,7 +7,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 class Todo extends StatefulWidget {
   final String userid;
-  Todo({required this.userid});
+  const Todo({this.userid = 'No'});
 
   @override
   _TodoState createState() => _TodoState();
@@ -62,7 +62,7 @@ class _TodoState extends State<Todo> {
     double height = MediaQuery.of(context).size.height;
     logout() {
       FirebaseAuth.instance.signOut();
-      Navigator.pushNamed(context, MyPath.loginPath);
+      context.pushNamed(MyPath.login);
     }
 
     return Scaffold(

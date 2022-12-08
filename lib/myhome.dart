@@ -15,21 +15,25 @@ class Myhome extends StatelessWidget {
           children: [
             Text(abc.toString()),
             ElevatedButton(
-              onPressed: () =>
-                  {Navigator.pushNamed(context, MyPath.splashPath)},
+              onPressed: () {
+                context.pushNamed(MyPath.splash);
+              },
               child: Text(
                 'splash',
               ),
             ),
             ElevatedButton(
-              onPressed: () => {Navigator.pushNamed(context, MyPath.loginPath)},
+              onPressed: () {
+                context.pushNamed(MyPath.login);
+              },
               child: Text(
                 'login',
               ),
             ),
             ElevatedButton(
-              onPressed: () =>
-                  {Navigator.pushNamed(context, MyPath.signupPath)},
+              onPressed: () {
+                context.pushNamed(MyPath.signup);
+              },
               child: Text(
                 'signup',
               ),
@@ -38,7 +42,7 @@ class Myhome extends StatelessWidget {
               onPressed: () async {
                 await FirebaseAuth.instance.signOut();
 
-                Navigator.pushNamed(context, MyPath.loginPath);
+                context.pushNamed(MyPath.login);
               },
               child: Text(
                 'logout',

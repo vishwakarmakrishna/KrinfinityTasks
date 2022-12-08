@@ -1,6 +1,4 @@
 import 'package:app/backend/auth.dart';
-import 'package:app/myhome.dart';
-import 'package:app/todo.dart';
 import 'package:email_validator/email_validator.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,8 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app/path/routes.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Signup extends StatefulWidget {
@@ -32,20 +28,20 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+//     double height = MediaQuery.of(context).size.height;
 
-// Height (without SafeArea)
-    var padding = MediaQuery.of(context).padding;
-    double height1 = height - padding.top - padding.bottom;
+// // Height (without SafeArea)
+//     var padding = MediaQuery.of(context).padding;
+//     double height1 = height - padding.top - padding.bottom;
 
-// Height (without status bar)
-    double height2 = height - padding.top;
+// // Height (without status bar)
+//     double height2 = height - padding.top;
 
-// Height (without status and toolbar)
-    double height3 = height - padding.top - kToolbarHeight;
-    final String applogo = 'assets/svg/brandnewtsvg.svg';
-    final Widget appLogoSvg = SvgPicture.asset(applogo,
-        width: width * 0.08, semanticsLabel: 'Acme Logo');
+// // Height (without status and toolbar)
+//     double height3 = height - padding.top - kToolbarHeight;
+//     final String applogo = 'assets/svg/brandnewtsvg.svg';
+//     final Widget appLogoSvg = SvgPicture.asset(applogo,
+//         width: width * 0.08, semanticsLabel: 'Acme Logo');
 
     return Material(
       color: Colors.blueAccent,
@@ -113,12 +109,11 @@ class _SignupState extends State<Signup> {
                               );
                               if (userid != 'No') {
                                 print(FirebaseAuth.instance.currentUser!.uid);
-                                await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Todo(
-                                            userid: userid,
-                                          )),
+                                context.pushNamed(
+                                  MyPath.todo,
+                                  params: {
+                                    'id': userid,
+                                  },
                                 );
                               }
                             }),
@@ -126,15 +121,17 @@ class _SignupState extends State<Signup> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: InkWell(
-                            child: const Text(
-                              'Already Registered?',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 15,
-                              ),
+                          child: const Text(
+                            'Already Registered?',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 15,
                             ),
-                            onTap: () =>
-                                Navigator.pushNamed(context, MyPath.loginPath)),
+                          ),
+                          onTap: () {
+                            context.pushNamed(MyPath.login);
+                          },
+                        ),
                       )
                     ],
                   ),
@@ -187,9 +184,9 @@ class _SignupState extends State<Signup> {
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     obscureText: true,
                     placeholder: 'Enter password',
-                    onChanged: (password) {
+                    onChanged: (_password) {
                       setState(() {
-                        password = this.password;
+                        password = _password;
                       });
                     },
                     validator: (password) {
@@ -214,12 +211,10 @@ class _SignupState extends State<Signup> {
                     },
                     validator: (confirmpassword) {
                       if (confirmpassword != null) {
-                        if (confirmpassword.isEmpty) {
-                          return "Password cannot be empty";
-                        } else if (password.length < 6) {
-                          return 'Must be atleast 6 characters long';
-                        } else if (confirmpassword != password) {
+                        if (confirmpassword != _passwordController.text) {
                           return "Password does not match";
+                        } else {
+                          return null;
                         }
                       } else {
                         return null;

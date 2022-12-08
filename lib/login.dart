@@ -1,12 +1,10 @@
 import 'package:app/backend/auth.dart';
-import 'package:app/todo.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:app/path/routes.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -29,20 +27,20 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     // Full screen width and height
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    // double height = MediaQuery.of(context).size.height;
 
-// Height (without SafeArea)
-    var padding = MediaQuery.of(context).padding;
-    double height1 = height - padding.top - padding.bottom;
+// // Height (without SafeArea)
+//     var padding = MediaQuery.of(context).padding;
+//     double height1 = height - padding.top - padding.bottom;
 
-// Height (without status bar)
-    double height2 = height - padding.top;
+// // Height (without status bar)
+//     double height2 = height - padding.top;
 
-// Height (without status and toolbar)
-    double height3 = height - padding.top - kToolbarHeight;
-    final String applogo = 'assets/svg/brandnewtsvg.svg';
-    final Widget appLogoSvg =
-        SvgPicture.asset(applogo, width: width, semanticsLabel: 'Acme Logo');
+// // Height (without status and toolbar)
+//     double height3 = height - padding.top - kToolbarHeight;
+//     final String applogo = 'assets/svg/brandnewtsvg.svg';
+    // final Widget appLogoSvg =
+    //     SvgPicture.asset(applogo, width: width, semanticsLabel: 'Acme Logo');
 
     return Material(
       color: Colors.blueAccent,
@@ -110,13 +108,11 @@ class _LoginState extends State<Login> {
                                     _passwordController.text);
 
                                 if (userid != 'No' && userid.isNotEmpty) {
-                                  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Todo(
-                                        userid: userid,
-                                      ),
-                                    ),
+                                  context.pushNamed(
+                                    MyPath.todo,
+                                    params: {
+                                      'id': userid,
+                                    },
                                   );
 
                                   if (form.validate()) {
@@ -132,13 +128,11 @@ class _LoginState extends State<Login> {
                                         backgroundColor: Colors.red,
                                         textColor: Colors.white,
                                         fontSize: 16.0);
-                                    await Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Todo(
-                                          userid: userid,
-                                        ),
-                                      ),
+                                    context.pushNamed(
+                                      MyPath.todo,
+                                      params: {
+                                        'id': userid,
+                                      },
                                     );
                                     setState(() {
                                       changeButton = false;
@@ -158,8 +152,9 @@ class _LoginState extends State<Login> {
                                   fontSize: 15,
                                 ),
                               ),
-                              onTap: () => Navigator.pushNamed(
-                                  context, MyPath.signupPath),
+                              onTap: () {
+                                context.pushNamed(MyPath.signup);
+                              },
                             ),
                           )
                         ],
