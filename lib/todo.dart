@@ -1,8 +1,9 @@
 import 'package:app/path/routes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 class Todo extends StatefulWidget {
@@ -17,20 +18,17 @@ class _TodoState extends State<Todo> {
   String todoTitle = "";
   String todoDes = "";
   bool taskdone = false;
-
-  createTodos() {
+  String get userid => '${FirebaseAuth.instance.currentUser?.uid}';
+  createTodos({required String description}) {
     DocumentReference documentReference = FirebaseFirestore.instance
         .collection('Users')
-        .doc(widget.userid)
+        .doc(userid)
         .collection('Tasks')
-        .doc(todoTitle);
-
-    // DocumentReference documentReference =
-    //     FirebaseFirestore.instance.collection(widget.userid).doc(todoTitle);
+        .doc(userid + todoTitle);
 
     Map<String, String> todos = {
       "todoTitle": todoTitle,
-      "todoDes": todoDes,
+      "todoDes": description,
       "taskdone": taskdone.toString()
     };
 
@@ -41,15 +39,36 @@ class _TodoState extends State<Todo> {
     });
   }
 
+  updateTodos({
+    required String todoTitle,
+    required String todoDes,
+    required bool taskdone,
+  }) async {
+    DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('Users')
+        .doc(userid)
+        .collection('Tasks')
+        .doc(userid + todoTitle);
+
+    Map<String, String> todos = {
+      "todoTitle": todoTitle,
+      "todoDes": todoDes,
+      "taskdone": taskdone.toString()
+    };
+
+    await documentReference.set(todos).whenComplete(() {
+      print(
+        "$todoTitle created",
+      );
+    });
+  }
+
   deleteTodos(item) {
     DocumentReference documentReference = FirebaseFirestore.instance
         .collection('Users')
-        .doc(widget.userid)
+        .doc(userid)
         .collection('Tasks')
-        .doc(item);
-
-    // DocumentReference documentReference =
-    //     FirebaseFirestore.instance.collection(widget.userid).doc(item);
+        .doc(userid + item);
 
     documentReference.delete().whenComplete(() {
       print("$item deleted");
@@ -60,6 +79,7 @@ class _TodoState extends State<Todo> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    final double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     logout() {
       FirebaseAuth.instance.signOut();
       context.pushNamed(MyPath.login);
@@ -80,6 +100,11 @@ class _TodoState extends State<Todo> {
           showDialog(
               context: context,
               builder: (BuildContext context) {
+                HtmlEditorController controller = HtmlEditorController(
+                  processNewLineAsBr: true,
+                  processInputHtml: true,
+                  processOutputHtml: true,
+                );
                 return AlertDialog(
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8)),
@@ -99,19 +124,18 @@ class _TodoState extends State<Todo> {
                       },
                     ),
                   ),
-                  content: TextField(
-                    style: TextStyle(backgroundColor: Colors.white),
-                    autocorrect: true,
-                    decoration:
-                        InputDecoration(hintText: 'Enter description here'),
-                    onChanged: (String value) {
-                      todoDes = value;
-                    },
+                  content: HtmlEditor(
+                    options: HtmlEditorOptions(
+                      height: height - keyboardHeight,
+                    ),
+                    controller: controller,
+                    hint: 'Enter description here',
                   ),
                   actions: <Widget>[
                     ElevatedButton(
-                        onPressed: () {
-                          createTodos();
+                        onPressed: () async {
+                          final des = await controller.getText();
+                          createTodos(description: des.toString());
 
                           Navigator.of(context).pop();
                         },
@@ -152,10 +176,34 @@ class _TodoState extends State<Todo> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
                               child: ListTile(
+                                onTap: () {
+                                  if (userid == 'No' || userid == 'null') {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(
+                                            'Please login to edit your tasks'),
+                                      ),
+                                    );
+                                    return;
+                                  } else {
+                                    context.pushNamed(
+                                      MyPath.editer,
+                                      params: {
+                                        'id': userid,
+                                        'title': documentSnapshot["todoTitle"]
+                                            .toString(),
+                                      },
+                                      queryParams: {
+                                        'done': documentSnapshot["taskdone"],
+                                      },
+                                      extra: documentSnapshot["todoDes"]
+                                          .toString(),
+                                    );
+                                  }
+                                },
                                 title: Text(documentSnapshot["todoTitle"]),
-                                subtitle: Text(
+                                subtitle: HtmlWidget(
                                   documentSnapshot["todoDes"],
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 trailing: IconButton(
                                     icon: Icon(

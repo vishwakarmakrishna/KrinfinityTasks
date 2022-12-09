@@ -27,6 +27,8 @@ dependencies:
   velocity_x: ^3.3.0
   go_router: ^5.2.2
   url_strategy: ^0.2.0
+  html_editor_enhanced: ^1.8.0
+  flutter_widget_from_html: ^0.9.0+1
 
 dev_dependencies:
   flutter_test:

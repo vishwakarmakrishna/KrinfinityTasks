@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app/editer/rich_text_editer.dart';
 import 'package:app/login.dart';
 import 'package:app/signup.dart';
 import 'package:app/splash.dart';
@@ -15,10 +16,12 @@ class MyPath {
   static String signupPath = "/signup";
   static String splashPath = "/splash";
   static String todoPath = "/todo/:id";
+  static String editerPath = "editer/:title";
   static String todo = "todo";
   static String signup = "signup";
   static String login = "login";
   static String splash = "splash";
+  static String editer = "editer";
 }
 
 GoRouter getRoute(String initialRoute) {
@@ -32,6 +35,22 @@ GoRouter getRoute(String initialRoute) {
           final id = state.params['id'].toString();
           return Todo(userid: id);
         },
+        routes: [
+          GoRoute(
+            path: MyPath.editerPath,
+            name: MyPath.editer,
+            builder: (context, state) {
+              final initText = state.extra.toString();
+              final title = state.params['title'].toString();
+              final isDone = state.queryParams['done'] == true;
+              return Editer(
+                title: title,
+                isDone: isDone,
+                initText: initText,
+              );
+            },
+          ),
+        ],
       ),
       GoRoute(
         path: MyPath.signupPath,
@@ -50,7 +69,7 @@ GoRouter getRoute(String initialRoute) {
       ),
     ],
     errorBuilder: (context, state) {
-      return const Scaffold(body: Center(child: Text('error')));
+      return Scaffold(body: Center(child: Text('error')));
     },
     observers: [
       if (kDebugMode) MyLoggerRouteObserver(),
@@ -69,18 +88,20 @@ class MyLoggerRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   @override
   void didPop(Route route, Route? previousRoute) {
     super.didPop(route, previousRoute);
-    log('didPop ${route.settings.name}', name: 'MyLoggerRouteObserver');
+    log('didPop ${route.settings.name} previousRoute ${previousRoute?.settings.name}',
+        name: 'MyLoggerRouteObserver');
   }
 
   @override
   void didRemove(Route route, Route? previousRoute) {
     super.didRemove(route, previousRoute);
-    log('didRemove ${route.settings.name}', name: 'MyLoggerRouteObserver');
+    log('didRemove ${route.settings.name} previousRoute ${previousRoute?.settings.name}',
+        name: 'MyLoggerRouteObserver');
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
-    log('didReplace ${newRoute?.settings.name}');
+    log('didReplace ${newRoute?.settings.name} previousRoute ${oldRoute?.settings.name}');
   }
 }
